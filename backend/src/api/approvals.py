@@ -5,9 +5,11 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from pydantic import BaseModel, ConfigDict
 from sqlalchemy.orm import Session
 
+from backend.src.api.dependencies import get_current_user
 from backend.src.db.session import get_session
 from backend.src.models.approval_step import ApprovalStepStatus
 from backend.src.models.document import DocumentStatus
+from backend.src.models.user import User
 from backend.src.services import approval_service
 
 router = APIRouter(prefix="/documents/{document_id}/steps", tags=["approvals"])
@@ -46,6 +48,8 @@ def _map_domain_error(error: Exception) -> HTTPException:
         return HTTPException(status_code=404, detail=str(error))
     if isinstance(error, approval_service.StepNotFoundError):
         return HTTPException(status_code=404, detail=str(error))
+    if isinstance(error, approval_service.AuthorizationError):
+        return HTTPException(status_code=403, detail=str(error))
     if isinstance(error, approval_service.ApproverMismatchError):
         return HTTPException(status_code=403, detail=str(error))
     if isinstance(error, approval_service.DocumentStateError):
@@ -63,6 +67,7 @@ def approve_step(
     step_id: uuid.UUID,
     payload: ApprovalDecisionRequest,
     session: Session = Depends(get_session),
+    current_user: User = Depends(get_current_user),
 ) -> ApprovalResponse:
     try:
         result = approval_service.approve_step(
@@ -82,6 +87,7 @@ def reject_step(
     step_id: uuid.UUID,
     payload: ApprovalDecisionRequest,
     session: Session = Depends(get_session),
+    current_user: User = Depends(get_current_user),
 ) -> ApprovalResponse:
     try:
         result = approval_service.reject_step(

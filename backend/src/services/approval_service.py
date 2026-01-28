@@ -23,7 +23,11 @@ class StepNotFoundError(ApprovalWorkflowError):
     """Raised when an approval step cannot be found."""
 
 
-class ApproverMismatchError(ApprovalWorkflowError):
+class AuthorizationError(ApprovalWorkflowError):
+    """Raised when an approver is not allowed to act on a step."""
+
+
+class ApproverMismatchError(AuthorizationError):
     """Raised when a step is acted on by a different approver."""
 
 

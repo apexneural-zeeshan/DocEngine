@@ -5,9 +5,11 @@ from fastapi import FastAPI
 
 from backend.src.core.config import load_settings
 from backend.src.api.approvals import router as approvals_router
+from backend.src.api.auth import router as auth_router
 from backend.src.api.documents import router as documents_router
 from backend.src.db.base import Base
 from backend.src.db.session import engine
+from backend.src.api.dev import router as dev_router
 
 
 @asynccontextmanager
@@ -21,6 +23,8 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 app.include_router(documents_router)
 app.include_router(approvals_router)
+app.include_router(auth_router)
+app.include_router(dev_router)
 
 
 @app.get("/health")

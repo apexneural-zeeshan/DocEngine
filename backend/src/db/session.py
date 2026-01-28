@@ -1,16 +1,17 @@
-import os
+"""Database session configuration and dependency helpers."""
+
 from typing import Generator
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
 
+from backend.src.core.config import load_settings
 from backend.src.models.base import Base
-from backend.src.models import approval_step, audit_log, document, user  # noqa: F401
+# Ensure model metadata is registered before creating tables.
+from backend.src.models import approval_step, audit_log, document, user  # pylint: disable=unused-import
 
-DATABASE_URL = os.getenv("DOCENGINE_DATABASE_URL")
-if not DATABASE_URL:
-    raise RuntimeError("DOCENGINE_DATABASE_URL is not set.")
-
+settings = load_settings()
+DATABASE_URL = settings.database_url
 engine = create_engine(
     DATABASE_URL,
     connect_args={"check_same_thread": False}
@@ -26,6 +27,7 @@ SessionLocal = sessionmaker(
 )
 
 def get_session() -> Generator[Session, None, None]:
+    """Yield a SQLAlchemy session and close it after use."""
     session = SessionLocal()
     try:
         yield session

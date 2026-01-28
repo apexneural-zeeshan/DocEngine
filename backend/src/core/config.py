@@ -1,20 +1,30 @@
+"""Application configuration loading."""
+
 from functools import lru_cache
+from pathlib import Path
 
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
+_ENV_PATH = Path(__file__).resolve().parents[3] / ".env"
+
 
 class Settings(BaseSettings):
-    app_name: str = "DocEngine"
-    environment: str = "development"
+    """Typed settings loaded from environment or .env."""
+
+    app_name: str
+    environment: str
+    database_url: str
+    secret_key: str
+    algorithm: str
+    access_token_expire_minutes: int
 
     model_config = SettingsConfigDict(
         env_prefix="DOCENGINE_",
-        env_file=".env",
-        env_file_encoding="utf-8",
-        extra="ignore",
+        env_file=str(_ENV_PATH),
     )
 
 
 @lru_cache
 def load_settings() -> Settings:
+    """Load and cache application settings."""
     return Settings()
