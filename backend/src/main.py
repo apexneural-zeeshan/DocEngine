@@ -2,6 +2,7 @@ import backend.src.models  # noqa: F401
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
+from dotenv import load_dotenv
 
 from backend.src.core.config import load_settings
 from backend.src.api.approvals import router as approvals_router
@@ -14,9 +15,11 @@ from backend.src.api.dev import router as dev_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    load_dotenv(override=False)
     settings = load_settings()
     app.state.settings = settings
     app.title = settings.app_name
+    Base.metadata.create_all(bind=engine)
     yield
 
 
@@ -30,7 +33,3 @@ app.include_router(dev_router)
 @app.get("/health")
 def health() -> dict[str, str]:
     return {"status": "OK"}
-
-@app.on_event("startup")
-def create_tables():
-    Base.metadata.create_all(bind=engine)

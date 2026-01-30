@@ -83,6 +83,10 @@ def decide_step(
     else:
         raise InvalidStepTransitionError(f"Unsupported decision: {decision}")
 
+    session.commit()
+    session.refresh(step)
+    session.refresh(document)
+
     return ApprovalResult(document=document, step=step)
 
 

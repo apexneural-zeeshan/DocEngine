@@ -3,9 +3,13 @@
 from functools import lru_cache
 from pathlib import Path
 
+from dotenv import load_dotenv
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 _ENV_PATH = Path(__file__).resolve().parents[3] / ".env"
+
+# Load .env early so settings are available during module imports (e.g., DB setup).
+load_dotenv(dotenv_path=_ENV_PATH, override=False)
 
 
 class Settings(BaseSettings):
