@@ -2,9 +2,8 @@ import backend.src.models  # noqa: F401
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
-from dotenv import load_dotenv
 
-from backend.src.core.config import load_settings
+from backend.src.core.settings import validate_settings
 from backend.src.api.approvals import router as approvals_router
 from backend.src.api.auth import router as auth_router
 from backend.src.api.documents import router as documents_router
@@ -15,8 +14,7 @@ from backend.src.api.dev import router as dev_router
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    load_dotenv(override=False)
-    settings = load_settings()
+    settings = validate_settings()
     app.state.settings = settings
     app.title = settings.app_name
     Base.metadata.create_all(bind=engine)

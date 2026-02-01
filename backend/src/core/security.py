@@ -6,7 +6,7 @@ from typing import Any, Dict, Optional
 import bcrypt
 from jose import jwt
 
-from backend.src.core.config import load_settings
+from backend.src.core.settings import load_settings
 
 
 def _get_settings() -> tuple[str, str, int]:

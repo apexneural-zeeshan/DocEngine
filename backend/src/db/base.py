@@ -1,3 +1,5 @@
-from sqlalchemy.orm import declarative_base
+"""Database base model import (single source of truth)."""
 
-Base = declarative_base()
+from backend.src.models.base import Base
+
+__all__ = ["Base"]

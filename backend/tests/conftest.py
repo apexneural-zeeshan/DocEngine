@@ -1,4 +1,9 @@
 import os
+
+# Ensure tests use an in-memory database before importing app modules.
+os.environ.setdefault("DOCENGINE_ENVIRONMENT", "test")
+os.environ.setdefault("DOCENGINE_DATABASE_URL", "sqlite+pysqlite:///:memory:")
+
 import backend.src.models  # noqa: E402,F401
 import backend.src.main as main_app  # noqa: E402
 import pytest
@@ -6,10 +11,6 @@ from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
-
-# Ensure tests use an in-memory database before importing app modules.
-os.environ.setdefault("DOCENGINE_DATABASE_URL", "sqlite+pysqlite:///:memory:")
-
 
 from backend.src.models.base import Base  # noqa: E402
 from backend.src.db.session import get_session  # noqa: E402

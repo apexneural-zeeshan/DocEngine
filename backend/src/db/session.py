@@ -5,7 +5,7 @@ from typing import Generator
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
 
-from backend.src.core.config import load_settings
+from backend.src.core.settings import load_settings
 from backend.src.models.base import Base
 # Ensure model metadata is registered before creating tables.
 from backend.src.models import approval_step, audit_log, document, user  # pylint: disable=unused-import
