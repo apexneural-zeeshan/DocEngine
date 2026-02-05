@@ -1,11 +1,16 @@
+#Python
 **/__pycache__/
 **/*.pyc
 **/*.pyo
 **/*.pyd
+.env
 .venv/
 .pytest_cache/
+
+#Git
 .git/
 .gitignore
 README.md
+
+#DB
 docengine.db
-.env
