@@ -51,3 +51,12 @@ def get_document(
     if document is None:
         raise HTTPException(status_code=404, detail="Document not found.")
     return document
+
+
+@router.get("", response_model=list[DocumentResponse])
+def list_documents(
+    session: Session = Depends(get_session),
+    current_user: User = Depends(get_current_user),
+) -> list[DocumentResponse]:
+    documents = document_service.list_documents(session)
+    return documents

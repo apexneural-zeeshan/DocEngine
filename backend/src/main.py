@@ -2,6 +2,7 @@ import backend.src.models  # noqa: F401
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 from backend.src.core.settings import validate_settings
 from backend.src.api.approvals import router as approvals_router
@@ -22,6 +23,16 @@ async def lifespan(app: FastAPI):
 
 
 app = FastAPI(lifespan=lifespan)
+
+# Add CORS middleware for frontend
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 app.include_router(documents_router)
 app.include_router(approvals_router)
 app.include_router(auth_router)
